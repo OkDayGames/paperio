@@ -1,6 +1,6 @@
 var gameState = function(game){};
 
-var isDebug = true;
+var isDebug = false;
 
 var player;
 var playerSpeed = 5;
@@ -90,7 +90,7 @@ gameState.prototype = {
 	},
 
 	create: function(){
-        console.log('hello');
+        //console.log('hello');
         game.stage.backgroundColor = '#DFF3F7';
         game.world.setBounds(0, 0, worldWidth, worldHeight);
 
@@ -132,9 +132,9 @@ gameState.prototype = {
 
         player.x = this.game.world.bounds.centerX;// + 25;
         player.y = this.game.world.bounds.centerY;// + 25;
-        console.log('player start x: ' + player.x);
-        console.log('player start y: ' +  player.y);
-        console.log(player);
+        //console.log('player start x: ' + player.x);
+        //console.log('player start y: ' +  player.y);
+        //console.log(player);
 
         //Setup positions
         bmdSprite.x = player.x;
@@ -300,7 +300,7 @@ gameState.prototype = {
             [1500, 1500],
             [1000,1500]
         ];
-        console.log(polyDots);
+        //console.log(polyDots);
 
         t_bmd.ctx.closePath();
         console.log('t_bmdSprite');
@@ -450,7 +450,7 @@ gameState.prototype = {
         //console.log(player.body);
         player.events.onEnterBounds.add(this.collisionHandler, this);
 
-        console.log(dots);
+        //console.log(dots);
 
         game.world.addChild(player);
 
@@ -459,7 +459,7 @@ gameState.prototype = {
     startDrag: function() {
             //  You can't have a sprite being moved by physics AND input, so we disable the physics while being dragged
             _bmdSprite.body.moves = false;
-            console.log('startdrag');
+            //console.log('startdrag');
         },
 
     stopDrag: function() {
@@ -689,7 +689,7 @@ gameState.prototype = {
 
         lines[lines.length] = new Phaser.Line(dots[dots.length-2].x, dots[dots.length-2].y, dots[dots.length-1].x, dots[dots.length-1].y);//new Line(dots[dots.length-2], dots[dots.length-1]);
         linesBorder[linesBorder.length] = lines[lines.length-1];
-        console.log('dots length in path: ' + dots.length);
+        //console.log('dots length in path: ' + dots.length);
 
         /*
         var dot;
@@ -787,13 +787,13 @@ gameState.prototype = {
             pathArr = [];
             pathArr.length = 0;
             //pathArr = dotsFlood;
-            console.log(dotsFlood);
+            //console.log(dotsFlood);
 
             //максимальне количество вызова рекурсивного поиска
             stepsLimit = dotsFlood.length * dotsFlood[0].length;
             //console.log('dots: ' + stepsLimit);
-            console.log(dotEnter);
-            console.log(dotExit);
+            //console.log(dotEnter);
+            //console.log(dotExit);
             //dotsFlood[0][0].terrain = false;
             //pathArr[0][0].terrain = false;
             //console.log('dotsFlood[0][0].terrain: ' + dotsFlood[0][0].terrain + '; pathArr[0][0].terrain: ' + pathArr[0][0].terrain);
@@ -824,17 +824,17 @@ gameState.prototype = {
                 }
             }
             */
-            console.log('exit step: ' + dotExit.step);
+            //console.log('exit step: ' + dotExit.step);
             dotExit.step = 0;
             //идем в обратном порядке
             this.patchInit(dotEnter);
 
-            console.log('patch array: -----------------------------------')
-            console.log(pathArr);
-            console.log('enter step: ' + dotEnter.step);
-            console.log('exit step: ' + dotExit.step);
-            console.log(dotExit);
-            console.log(dotEnter);
+            //console.log('patch array: -----------------------------------')
+            //console.log(pathArr);
+            //console.log('enter step: ' + dotEnter.step);
+            //console.log('exit step: ' + dotExit.step);
+            //console.log(dotExit);
+            //console.log(dotEnter);
             //------------------------------------------------------------------------------------------------------------------------
 
             //draw lines
@@ -877,17 +877,17 @@ gameState.prototype = {
     patchInit: function(dot){
         if(dot.step > 0){
             pathArr[pathArr.length] = dotsFlood[dot.index_i][dot.index_j];
-            console.log('!!!!!!!!!');
+            //console.log('!!!!!!!!!');
         if(dot.index_i - 1 >= 0 && dotsFlood[dot.index_i - 1][dot.index_j].checked && dotsFlood[dot.index_i - 1][dot.index_j].step == dot.step - 1){
             this.patchInit(dotsFlood[dot.index_i - 1][dot.index_j]);
         }
-        if(dot.index_j - 1 >= 0 && dotsFlood[dot.index_i][dot.index_j-1].checked && dotsFlood[dot.index_i][dot.index_j-1].step == dot.step - 1){
+        else if(dot.index_j - 1 >= 0 && dotsFlood[dot.index_i][dot.index_j-1].checked && dotsFlood[dot.index_i][dot.index_j-1].step == dot.step - 1){
             this.patchInit(dotsFlood[dot.index_i][dot.index_j-1]);
         }
-        if(dot.index_i + 1 < dotsFlood.length && dotsFlood[dot.index_i+1][dot.index_j].checked && dotsFlood[dot.index_i+1][dot.index_j].step == dot.step - 1){
+        else if(dot.index_i + 1 < dotsFlood.length && dotsFlood[dot.index_i+1][dot.index_j].checked && dotsFlood[dot.index_i+1][dot.index_j].step == dot.step - 1){
             this.patchInit(dotsFlood[dot.index_i+1][dot.index_j]);
         }
-        if(dot.index_j + 1 < dotsFlood[dot.index_i].length && dotsFlood[dot.index_i][dot.index_j+1].checked && dotsFlood[dot.index_i][dot.index_j+1].step == dot.step - 1){
+        else if(dot.index_j + 1 < dotsFlood[dot.index_i].length && dotsFlood[dot.index_i][dot.index_j+1].checked && dotsFlood[dot.index_i][dot.index_j+1].step == dot.step - 1){
             this.patchInit(dotsFlood[dot.index_i][dot.index_j+1]);
         }
     }else{
@@ -907,7 +907,7 @@ gameState.prototype = {
             //var _step = step+1;
             //step+=1;
             //dot.step = step;
-            console.log(dot.step);
+            //console.log(dot.step);
             //dot.checked = true;
             dotsFlood[dot.index_i][dot.index_j].checked = true;
             //console.log(step);
@@ -927,28 +927,28 @@ gameState.prototype = {
             //если координаты ячейки совпадают с координатами ячейки входа - прекращаем движение
             if(dot.index_i-1 >= 0 && dotsFlood[dot.index_i-1][dot.index_j].step == 0 && dotsFlood[dot.index_i-1][dot.index_j].terrain && !dotsFlood[dot.index_i-1][dot.index_j].checked){
                 dotsFlood[dot.index_i-1][dot.index_j].step = dotsFlood[dot.index_i][dot.index_j].step+1;
-                console.log('i: ' + dot.index_i + ' | j: ' + dot.index_j + ' | step: ' + dotsFlood[dot.index_i-1][dot.index_j].step + ' => ' + dotsFlood[dot.index_i-1][dot.index_j].index_i + '; ' + dotsFlood[dot.index_i-1][dot.index_j].index_j);       
+                //console.log('i: ' + dot.index_i + ' | j: ' + dot.index_j + ' | step: ' + dotsFlood[dot.index_i-1][dot.index_j].step + ' => ' + dotsFlood[dot.index_i-1][dot.index_j].index_i + '; ' + dotsFlood[dot.index_i-1][dot.index_j].index_j);       
                 //console.log('1');
                 //this.getPath(dotsFlood[dot.index_i-1][dot.index_j], step);
                 this.getPath(dotsFlood[dot.index_i-1][dot.index_j]);
             }
             if(dot.index_j-1 >= 0  && dotsFlood[dot.index_i][dot.index_j-1].step == 0 && dotsFlood[dot.index_i][dot.index_j-1].terrain && !dotsFlood[dot.index_i][dot.index_j-1].checked){
                 dotsFlood[dot.index_i][dot.index_j-1].step = dotsFlood[dot.index_i][dot.index_j].step+1;
-                console.log('i: ' + dot.index_i + ' | j: ' + dot.index_j + ' | step: ' + dotsFlood[dot.index_i][dot.index_j-1].step + ' => ' + dotsFlood[dot.index_i][dot.index_j-1].index_i + '; ' + dotsFlood[dot.index_i][dot.index_j-1].index_j);
+                //console.log('i: ' + dot.index_i + ' | j: ' + dot.index_j + ' | step: ' + dotsFlood[dot.index_i][dot.index_j-1].step + ' => ' + dotsFlood[dot.index_i][dot.index_j-1].index_i + '; ' + dotsFlood[dot.index_i][dot.index_j-1].index_j);
                 //console.log('2');
                 //this.getPath(dotsFlood[dot.index_i][dot.index_j-1], step);
                 this.getPath(dotsFlood[dot.index_i][dot.index_j-1]);
             }
             if(dot.index_i+1 < dotsFlood.length && dotsFlood[dot.index_i+1][dot.index_j].step == 0 && dotsFlood[dot.index_i+1][dot.index_j].terrain && !dotsFlood[dot.index_i+1][dot.index_j].checked){
                 dotsFlood[dot.index_i+1][dot.index_j].step = dotsFlood[dot.index_i][dot.index_j].step+1;
-                console.log('i: ' + dot.index_i + ' | j: ' + dot.index_j + ' | step: ' + dotsFlood[dot.index_i+1][dot.index_j].step + ' => ' + dotsFlood[dot.index_i+1][dot.index_j].index_i + '; ' + dotsFlood[dot.index_i+1][dot.index_j].index_j); 
+                //console.log('i: ' + dot.index_i + ' | j: ' + dot.index_j + ' | step: ' + dotsFlood[dot.index_i+1][dot.index_j].step + ' => ' + dotsFlood[dot.index_i+1][dot.index_j].index_i + '; ' + dotsFlood[dot.index_i+1][dot.index_j].index_j); 
                 //console.log('3');
                 //this.getPath(dotsFlood[dot.index_i+1][dot.index_j], step);
                 this.getPath(dotsFlood[dot.index_i+1][dot.index_j]);
             }
             if(dot.index_j+1 < dotsFlood[dot.index_i].length && dotsFlood[dot.index_i][dot.index_j+1].step == 0 && dotsFlood[dot.index_i][dot.index_j+1].terrain && !dotsFlood[dot.index_i][dot.index_j+1].checked){
                 dotsFlood[dot.index_i][dot.index_j+1].step = dotsFlood[dot.index_i][dot.index_j].step+1;
-                console.log('i: ' + dot.index_i + ' | j: ' + dot.index_j + ' | step: ' + dotsFlood[dot.index_i][dot.index_j+1].step + ' => ' + dotsFlood[dot.index_i][dot.index_j+1].index_i + '; ' + dotsFlood[dot.index_i][dot.index_j+1].index_j);
+                //console.log('i: ' + dot.index_i + ' | j: ' + dot.index_j + ' | step: ' + dotsFlood[dot.index_i][dot.index_j+1].step + ' => ' + dotsFlood[dot.index_i][dot.index_j+1].index_i + '; ' + dotsFlood[dot.index_i][dot.index_j+1].index_j);
                 //console.log('4');
                 //this.getPath(dotsFlood[dot.index_i][dot.index_j+1], step);
                 this.getPath(dotsFlood[dot.index_i][dot.index_j+1]);
@@ -1014,11 +1014,11 @@ gameState.prototype = {
         if(dots[dots.length - 1].y%10>0){
             dots[dots.length - 1].y = dots[dots.length - 1].y - dots[dots.length - 1].y % 10;
         }
-        console.log('x%10: ' + dots[dots.length - 1].x%10);
+        //console.log('x%10: ' + dots[dots.length - 1].x%10);
         //lines[lines.length] = new Line(dots[dots.length-2], dots[dots.length-1]);
         dotExit = dots[dots.length - 1];
 
-        console.log('dot exit: ' + dotExit.x + '; ' + dotExit.y);
+        //console.log('dot exit: ' + dotExit.x + '; ' + dotExit.y);
         //playerPrexXY.x = player.x;
         //playerPrexXY.y = player.y;
     },
@@ -1242,7 +1242,7 @@ gameState.prototype = {
 
                         dots[dots.length-1].x = Math.round(dots[dots.length-1].x);
                         dots[dots.length-1].y = Math.round(dots[dots.length-1].y);
-                        console.log(dots[dots.length-1].x + '; ' + dots[dots.length-1].y);
+                        //console.log(dots[dots.length-1].x + '; ' + dots[dots.length-1].y);
 
                         lines[lines.length] = new Phaser.Line(dots[dots.length-2].x, dots[dots.length-2].y, dots[dots.length-1].x, dots[dots.length-1].y);//new Line(dots[dots.length-2], dots[dots.length-1]);
                         linesBorder[linesBorder.length] = lines[lines.length-1];
@@ -1370,8 +1370,8 @@ gameState.prototype = {
                 //
                 //t_bmdSprite.body.clearShapes();
                 
-                console.log(dots);
-                console.log(t_bmd.getPixelRGB(player.x, player.y));
+                //console.log(dots);
+                //console.log(t_bmd.getPixelRGB(player.x, player.y));
 
                 //if(polyDots.length%4 == 0){
                     //t_bmdSprite.body.clearShapes();
