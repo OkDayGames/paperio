@@ -11,8 +11,8 @@ var cursors;
 var lineStep;
 var linesCount = 1000;
 
-var worldWidth = 2000;
-var worldHeight = 2000;
+var worldWidth = 3400;
+var worldHeight = 3400;
 
 var Side = {'left':'LEFT','right':'RIGHT','up':'UP','down':'DOWN'};
 var movementSide;// = Side.down;
@@ -83,6 +83,13 @@ var greenDots = [];
 var pathArr = [];
 var stepsLimit;
 var isPathFinded = false;
+var bmp_mapEdjes;
+var bmp_mapEdjesSprite;
+
+var canMove;
+var touctDown = {'x':0,'y':0};
+var touctUp = {'x':0,'y':0};
+var swipeMagnitude = 0;
 
 gameState.prototype = {
 	preload: function(){
@@ -161,7 +168,7 @@ gameState.prototype = {
             }else if(keyCode.code == 'ArrowRight'){
                 //console.log(player.x%lineStep);
                 newDir = Side.right;
-                console.log('right');
+                //console.log('right');
             }else if(keyCode.code == 'ArrowDown'){
                 //console.log(player.x%lineStep);
                 newDir = Side.down;
@@ -279,11 +286,14 @@ gameState.prototype = {
         t_bmd.ctx.lineTo(player.x - player.width, player.y + player.width);
 
         dots = [
-            //new Phaser.Point(player.x, player.y),
-            new Phaser.Point(player.x - 50, player.y - 50),
-            new Phaser.Point(player.x + 50, player.y - 50),
-            new Phaser.Point(player.x + 50, player.y + 50),
-            new Phaser.Point(player.x - 50, player.y + 50),
+            new Phaser.Point(player.x - 50, player.y),
+            new Phaser.Point(player.x + 50, player.y),
+            new Phaser.Point(player.x, player.y + 50),
+            new Phaser.Point(player.x, player.y - 50),
+            new Phaser.Point(player.x+50, player.y + 50),
+            new Phaser.Point(player.x+50, player.y - 50),
+            new Phaser.Point(player.x-50, player.y + 50),
+            new Phaser.Point(player.x-50, player.y - 50),
             //new Phaser.Point(player.x, player.y)
         ];
         dotIndex = 3;
@@ -303,13 +313,38 @@ gameState.prototype = {
         //console.log(polyDots);
 
         t_bmd.ctx.closePath();
-        console.log('t_bmdSprite');
+        //console.log('t_bmdSprite');
         //console.log(t_bmdSprite);
         t_bmd.ctx.stroke();
         t_bmd.ctx.fill();
         t_bmd.ctx.closePath();
 
         t_bmd.update();
+
+        //------------------------------------------------
+
+        bmp_mapEdjes = game.add.bitmapData(worldWidth, worldHeight);
+        bmp_mapEdjesSprite = game.add.sprite(0, 0, bmp_mapEdjes);
+        //bmp_mapEdjesSprite.anchor.set(0.5);
+        //bmp_mapEdjes.ctx.fillStyle = '#FFFFFF';
+        bmp_mapEdjes.ctx.strokeStyle = '#d3d3d3';
+        bmp_mapEdjes.ctx.lineWidth = 50;
+        bmp_mapEdjes.ctx.beginPath();
+
+        bmp_mapEdjes.ctx.rect(250, 250, worldWidth - 300*2+100-3, worldHeight - 300*2+100-3);
+        //bmp_mapEdjesSprite.pivot.x = bmp_mapEdjesSprite.width/2;
+        //bmp_mapEdjesSprite.pivot.y = bmp_mapEdjesSprite.height/2;
+        bmp_mapEdjesSprite.anchor.set(0.5);
+        bmp_mapEdjesSprite.x = worldWidth/2;
+        bmp_mapEdjesSprite.y = worldHeight/2;
+        //bmp_mapEdjesSprite.width -= 250;
+        //bmp_mapEdjesSprite.height -= 250;
+        bmp_mapEdjesSprite.alpha = 1;
+
+        bmp_mapEdjes.ctx.stroke();
+        //bmp_mapEdjes.ctx.fill();
+        bmp_mapEdjes.ctx.closePath();
+        bmp_mapEdjes.update();
 
         //_bmdSprite.body.clearShapes();
         //_bmdSprite.body.addPolygon({},[[0, 0], [70, 0], [70, 70], [0, 0]]);
@@ -455,7 +490,77 @@ gameState.prototype = {
         game.world.addChild(player);
 
         player.anchor.set(0.5);
+
+        //----------------
+
+        this.game.input.onDown.add(this.itemTouchedDown, this);
+        this.game.input.onUp.add(this.itemTouchedUp, this);
 	},
+    itemTouchedDown: function(point){
+        touctDown.x = point.screenX;
+        touctDown.y = point.screenY;
+        //console.log('x: ' + point.screenX + '; ' + 'y: ' + point.screenY);
+        //console.log(touctDown);
+    },
+    itemTouchedUp: function(point){
+        touctUp.x = point.screenX;
+        touctUp.y = point.screenY;
+        //console.log('x: ' + point.screenX + '; ' + 'y: ' + point.screenY);
+        //console.log(touctUp);
+
+        this.getMagnitude(touctDown, touctUp);
+    },
+    getMagnitude: function(start, end){
+        if(start.x > end.x && start.y > end.y && start.x - end.x > start.y - end.y){
+            //left
+            //if(start.x - end.x > start.y - end.y){
+                newDir = Side.left;
+                //console.log('swipe left');
+            //}
+        } else if(start.x > end.x && start.y < end.y && start.x - end.x > end.y - start.y){
+            //left
+            //if(start.x - end.x > end.y - start.y){
+                newDir = Side.left;
+                //console.log('swipe left');
+            //}
+        }else if(end.x > start.x && start.y > end.y && end.x - start.x > start.y - end.y){
+            //right
+            //if(end.x - start.x > start.y - end.y){
+                newDir = Side.right;
+                //console.log('swipe right');
+            //}
+        } else if(end.x > start.x && start.y < end.y && end.x - start.x > end.y - start.y){
+            //right
+            //if(end.x - start.x > end.y - start.y){
+                newDir = Side.right;
+                //console.log('swipe right');
+            //}
+        } else if(start.y < end.y && start.x > end.x && end.y - start.y > start.x - end.x){
+            //down
+            //if(start.y - end.y > start.x - end.x){
+                newDir = Side.down;
+                //console.log('swipe down');
+            //}
+        } else if(start.y < end.y && start.x < end.x && end.y - start.x > end.x - start.x){
+            //down
+            //if(start.x - end.x > end.y - start.y){
+                newDir = Side.down;
+                //console.log('swipe down');
+            //}
+        } else if(start.y > end.y && start.x > end.x && start.y - end.y > start.x - end.x){
+            //up
+            //if(start.y - end.y > start.x - end.x){
+                newDir = Side.up;
+                //console.log('swipe up');
+            //}
+        } else if(start.y > end.y && start.x < end.x && start.y - end.y > end.x - start.x){
+            //up
+            //if(start.x - end.x > end.y - start.y){
+                newDir = Side.up;
+                //console.log('swipe up');
+            //}
+        }
+    },
     startDrag: function() {
             //  You can't have a sprite being moved by physics AND input, so we disable the physics while being dragged
             _bmdSprite.body.moves = false;
@@ -523,12 +628,6 @@ gameState.prototype = {
                 game.debug.geom(pathArr[i], 'rgba(0,255,0,1)'); 
             }
             //console.log(dotsFlood);
-        if (t_bmd.ctx.isPointInPath(1200,1200))
-        {
-            game.debug.geom(new Phaser.Point(1200,1200), 'rgba(255,255,255,1)');
-        }else{
-            game.debug.geom(new Phaser.Point(1200,1200), 'rgba(128,0,128,1)');
-        }
 
         //берем произвольный не закрашенный элемент из dotsFlood, создаем двухмерный массив и переносим туда строки и столбцы из dotsFlood
         //если ни один из элементов не принадлежит множеству точек, содержащих границу - то область закрашивается
@@ -587,28 +686,28 @@ gameState.prototype = {
         //console.log('COLLISION !!!!!!!!!!!!!');
     },
 	update: function(){
-        if(_bmdSprite.input.isDragged ){
-                //BODY => follow pointer
-                if( _bmdSprite.body != null ){
-                    _bmdSprite.body.x = game.input.activePointer.worldX;
-                    _bmdSprite.body.y = game.input.activePointer.worldY;
-                }
+        //this.playerMove();
+
+        if(newDir == Side.right){
+            if(player.x < worldWidth - 305){//bmp_mapEdjes.getPixelRGB(player.x+30,player.y).color == 4292072403){
+                this.playerMove();
             }
+        }else if(newDir == Side.up){
+            if(player.y > 305){
+                this.playerMove();
+            }
+        }else if(newDir == Side.left){
+            if(player.x > 305){
+                this.playerMove();
+            }
+        }else if(newDir == Side.down){
+            if(player.y < worldHeight - 305){
+                this.playerMove();
+            }
+        }
 
-
-    	this.playerMove();
-    	//console.log(player.x%25);
-    	//console.log(player.body.overlapX);
-        
-        //var boundsA = player.getBounds();
-        //var boundsB = spriteB.getBounds();
-        //game.physics.arcade.collide(player, _bmdSprite, this.collisionHandler, null, this);
-        //game.physics.arcade.overlap(_bmdSprite, player, this.collisionHandler);
-
-        //t_bmd.update();
-        //console.log(dots);
-        
-        //console.log(t_bmd.getPixelRGB(player.x, player.y));
+        //console.log(player.y);
+       
         if(this.onTerrain() && !enterFlag){
             onTerrain = true;
             enterFlag = true;
@@ -651,7 +750,7 @@ gameState.prototype = {
     },
     onEnterTerrain: function(){
         //console.log('callback ENTER');
-        t_bmd.update();
+        //t_bmd.update();
 
         var offset = 50;
         //var offset_2 = 50;
@@ -665,6 +764,7 @@ gameState.prototype = {
                 obj.checked = false;
             }
         });
+
         //dots[0] = new Phaser.Point(player.x,player.y);
         //dots[dots.length] = new Phaser.Point(player.x+25,player.y+25);
         if(movementSide == Side.left){
@@ -684,7 +784,7 @@ gameState.prototype = {
         if(dots[dots.length - 1].y%10>0){
             dots[dots.length - 1].y = dots[dots.length - 1].y - dots[dots.length - 1].y % 10;
         }
-        console.log('x%10: ' + dots[dots.length - 1].x%10);
+        //console.log('x%10: ' + dots[dots.length - 1].x%10);
         //console.log('dot enter: ' + dots[dots.length - 1].x + '; ' + dots[dots.length - 1].y);
 
         lines[lines.length] = new Phaser.Line(dots[dots.length-2].x, dots[dots.length-2].y, dots[dots.length-1].x, dots[dots.length-1].y);//new Line(dots[dots.length-2], dots[dots.length-1]);
@@ -801,7 +901,7 @@ gameState.prototype = {
             isPathFinded = false;
 
             //dotExit.step = 0;
-            console.log('exit step: ' + dotExit.step);
+            //console.log('exit step: ' + dotExit.step);
             //начинаем с dotExit
             if(isDotsFloodInit){
                 this.getPath(dotExit);
@@ -853,15 +953,16 @@ gameState.prototype = {
             }
         
             t_bmd.ctx.stroke();
-            t_bmd.ctx.closePath();
+            //t_bmd.ctx.closePath();
             t_bmd.ctx.fill();
             t_bmd.update();    
         
             game.world.addChild(player);
             //console.log(dotExit);
 
-
-            this.checkTerrainDot();
+            delete dots;
+            delete dotsFlood;
+            delete pathArr;
     },
     checkTerrainDot: function(){
         for(var i = 0; i < dotsFlood.length; i++){
@@ -875,7 +976,7 @@ gameState.prototype = {
         }
     },
     patchInit: function(dot){
-        if(dot.step > 0){
+        if(dot != dotExit){
             pathArr[pathArr.length] = dotsFlood[dot.index_i][dot.index_j];
             //console.log('!!!!!!!!!');
         if(dot.index_i - 1 >= 0 && dotsFlood[dot.index_i - 1][dot.index_j].checked && dotsFlood[dot.index_i - 1][dot.index_j].step == dot.step - 1){
@@ -896,14 +997,16 @@ gameState.prototype = {
     }
     },
     getPath: function(dot){
-        if(dot.index_i == dotEnter.index_i && dot.index_j == dotEnter.index_j){
+        if(dot == dotEnter || dot.step >= stepsLimit){
                 isPathFinded = true;
+                dotsFlood[dot.index_i][dot.index_j].checked = true;
+                return;
                 //dotsFlood[dot.index_i][dot.index_j].checked = true;
-                console.log('final step: ' + dot.step);
+                //console.log('final step: ' + dot.step);
                 //return;
                 //console.log('!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!')
             }
-        else if(dot.step <= stepsLimit){
+        else{
             //var _step = step+1;
             //step+=1;
             //dot.step = step;
@@ -930,57 +1033,54 @@ gameState.prototype = {
                 //console.log('i: ' + dot.index_i + ' | j: ' + dot.index_j + ' | step: ' + dotsFlood[dot.index_i-1][dot.index_j].step + ' => ' + dotsFlood[dot.index_i-1][dot.index_j].index_i + '; ' + dotsFlood[dot.index_i-1][dot.index_j].index_j);       
                 //console.log('1');
                 //this.getPath(dotsFlood[dot.index_i-1][dot.index_j], step);
-                this.getPath(dotsFlood[dot.index_i-1][dot.index_j]);
+                //this.getPath(dotsFlood[dot.index_i-1][dot.index_j]);
             }
             if(dot.index_j-1 >= 0  && dotsFlood[dot.index_i][dot.index_j-1].step == 0 && dotsFlood[dot.index_i][dot.index_j-1].terrain && !dotsFlood[dot.index_i][dot.index_j-1].checked){
                 dotsFlood[dot.index_i][dot.index_j-1].step = dotsFlood[dot.index_i][dot.index_j].step+1;
                 //console.log('i: ' + dot.index_i + ' | j: ' + dot.index_j + ' | step: ' + dotsFlood[dot.index_i][dot.index_j-1].step + ' => ' + dotsFlood[dot.index_i][dot.index_j-1].index_i + '; ' + dotsFlood[dot.index_i][dot.index_j-1].index_j);
                 //console.log('2');
                 //this.getPath(dotsFlood[dot.index_i][dot.index_j-1], step);
-                this.getPath(dotsFlood[dot.index_i][dot.index_j-1]);
+                //this.getPath(dotsFlood[dot.index_i][dot.index_j-1]);
             }
             if(dot.index_i+1 < dotsFlood.length && dotsFlood[dot.index_i+1][dot.index_j].step == 0 && dotsFlood[dot.index_i+1][dot.index_j].terrain && !dotsFlood[dot.index_i+1][dot.index_j].checked){
                 dotsFlood[dot.index_i+1][dot.index_j].step = dotsFlood[dot.index_i][dot.index_j].step+1;
                 //console.log('i: ' + dot.index_i + ' | j: ' + dot.index_j + ' | step: ' + dotsFlood[dot.index_i+1][dot.index_j].step + ' => ' + dotsFlood[dot.index_i+1][dot.index_j].index_i + '; ' + dotsFlood[dot.index_i+1][dot.index_j].index_j); 
                 //console.log('3');
                 //this.getPath(dotsFlood[dot.index_i+1][dot.index_j], step);
-                this.getPath(dotsFlood[dot.index_i+1][dot.index_j]);
+                //this.getPath(dotsFlood[dot.index_i+1][dot.index_j]);
             }
             if(dot.index_j+1 < dotsFlood[dot.index_i].length && dotsFlood[dot.index_i][dot.index_j+1].step == 0 && dotsFlood[dot.index_i][dot.index_j+1].terrain && !dotsFlood[dot.index_i][dot.index_j+1].checked){
                 dotsFlood[dot.index_i][dot.index_j+1].step = dotsFlood[dot.index_i][dot.index_j].step+1;
                 //console.log('i: ' + dot.index_i + ' | j: ' + dot.index_j + ' | step: ' + dotsFlood[dot.index_i][dot.index_j+1].step + ' => ' + dotsFlood[dot.index_i][dot.index_j+1].index_i + '; ' + dotsFlood[dot.index_i][dot.index_j+1].index_j);
                 //console.log('4');
                 //this.getPath(dotsFlood[dot.index_i][dot.index_j+1], step);
-                this.getPath(dotsFlood[dot.index_i][dot.index_j+1]);
+                //this.getPath(dotsFlood[dot.index_i][dot.index_j+1]);
             }
 
             if(dot.index_i-1 >= 0 && dotsFlood[dot.index_i-1][dot.index_j].step == dot.step+1 && dotsFlood[dot.index_i-1][dot.index_j].terrain && !dotsFlood[dot.index_i-1][dot.index_j].checked){
                 //dotsFlood[dot.index_i-1][dot.index_j].step = dotsFlood[dot.index_i][dot.index_j].step+1;
                 //console.log('i: ' + dot.index_i + ' | j: ' + dot.index_j + ' | step: ' + dotsFlood[dot.index_i-1][dot.index_j].step + ' => ' + dotsFlood[dot.index_i-1][dot.index_j].index_i + '; ' + dotsFlood[dot.index_i-1][dot.index_j].index_j);       
                 //console.log('-1');
-                //this.getPath(dotsFlood[dot.index_i-1][dot.index_j]);
+                this.getPath(dotsFlood[dot.index_i-1][dot.index_j]);
             }
             if(dot.index_j-1 >= 0  && dotsFlood[dot.index_i][dot.index_j-1].step == dot.step+1 && dotsFlood[dot.index_i][dot.index_j-1].terrain && !dotsFlood[dot.index_i][dot.index_j-1].checked){
                 //dotsFlood[dot.index_i][dot.index_j-1].step = dotsFlood[dot.index_i][dot.index_j].step+1;
                 //console.log('i: ' + dot.index_i + ' | j: ' + dot.index_j + ' | step: ' + dotsFlood[dot.index_i][dot.index_j-1].step + ' => ' + dotsFlood[dot.index_i][dot.index_j-1].index_i + '; ' + dotsFlood[dot.index_i][dot.index_j-1].index_j);
                 //console.log('-2');
-                //this.getPath(dotsFlood[dot.index_i][dot.index_j-1]);
+                this.getPath(dotsFlood[dot.index_i][dot.index_j-1]);
             }
             if(dot.index_i+1 < dotsFlood.length && dotsFlood[dot.index_i+1][dot.index_j].step == dot.step+1 && dotsFlood[dot.index_i+1][dot.index_j].terrain && !dotsFlood[dot.index_i+1][dot.index_j].checked){
                 //dotsFlood[dot.index_i+1][dot.index_j].step = dotsFlood[dot.index_i][dot.index_j].step+1;
                 //console.log('i: ' + dot.index_i + ' | j: ' + dot.index_j + ' | step: ' + dotsFlood[dot.index_i+1][dot.index_j].step + ' => ' + dotsFlood[dot.index_i+1][dot.index_j].index_i + '; ' + dotsFlood[dot.index_i+1][dot.index_j].index_j); 
                 //console.log('-3');
-                //this.getPath(dotsFlood[dot.index_i+1][dot.index_j]);
+                this.getPath(dotsFlood[dot.index_i+1][dot.index_j]);
             }
             if(dot.index_j+1 < dotsFlood[dot.index_i].length && dotsFlood[dot.index_i][dot.index_j+1].step == dot.step+1 && dotsFlood[dot.index_i][dot.index_j+1].terrain && !dotsFlood[dot.index_i][dot.index_j+1].checked){
                 //dotsFlood[dot.index_i][dot.index_j+1].step = dotsFlood[dot.index_i][dot.index_j].step+1;
                 //console.log('i: ' + dot.index_i + ' | j: ' + dot.index_j + ' | step: ' + dotsFlood[dot.index_i][dot.index_j+1].step + ' => ' + dotsFlood[dot.index_i][dot.index_j+1].index_i + '; ' + dotsFlood[dot.index_i][dot.index_j+1].index_j);
                 //console.log('-4');
-                //this.getPath(dotsFlood[dot.index_i][dot.index_j+1]);
+                this.getPath(dotsFlood[dot.index_i][dot.index_j+1]);
             }
-        }
-        else{
-            return;
         }
         //пока точка параметра не равна точке выхода в территорию - применить функцию к соседней не закрашенной точке
         //выбираем соседнюю точку у которой значение step равно нулю и присваиваем ей текущее значение step
@@ -993,10 +1093,11 @@ gameState.prototype = {
         t_bmd.ctx.moveTo(dots[dots.length-1].x, dots[dots.length-1].y);
         lastDotIndex = dots.length - 1;
         //console.log('callback EXIT');
-        dots = []
-        ;
-        dots.length = 0;
+        dots = dots.splice(0,0);
+        //console.log('splice!!!');
+        //console.log(dots);
         lines = [];
+        dotsFlood = dotsFlood.splice(0,0);
         
         if(movementSide == Side.left){
             dots[dots.length] = new Phaser.Point(player.x+25+5,player.y);
@@ -1031,51 +1132,19 @@ gameState.prototype = {
         //console.log(color);
         
         //t_bmd.update();
-
+        
 		if(movementSide == Side.left){
-            player.body.x -= playerSpeed;//moveLeft(300);
-            //if(movementSide == newDir){
-                trail.lineTo(player.body.x, player.body.y+player.width/2);
-                //territory.lineTo(player.body.x, player.body.y+player.width/2);
-            //}
-            //testLine.lineTo(player.x - game.world.centerX+45, player.y - game.world.centerY);
-            //trail.lineTo(player.body.x + player.width, player.body.y+player.width/2);
-            /*
-            if(player.x <= playerPrexXY.x - player.width && !cellShaded){
-                cellShaded = true;
-                
-            }
-            if(cellShaded){
-                    cellShaded = false;
-                    playerPrexXY.x = player.x;
-                    playerPrexXY.y = player.y;
-                    t_bmd.rect(player.x, player.y, 50, 50, "rgba(255,202,0,0.5)");
-                }
-                */
+            player.body.x -= playerSpeed;
+            trail.lineTo(player.body.x, player.body.y+player.width/2);
         }else if(movementSide == Side.right){
-            player.body.x += playerSpeed;//moveRight(300);
-            //if(movementSide == newDir){
-                trail.lineTo(player.body.x+player.width, player.body.y+player.width/2);
-                //territory.lineTo(player.body.x+player.width, player.body.y+player.width/2);
-            //}
-            //testLine.lineTo(player.x - game.world.centerX+5, player.y - game.world.centerY);
-            //trail.lineTo(player.body.x, player.body.y+player.width/2);
+            player.body.x += playerSpeed;
+            trail.lineTo(player.body.x+player.width, player.body.y+player.width/2);
         }else if(movementSide == Side.up){
-            player.body.y -= playerSpeed;//moveUp(300);
-            //if(movementSide == newDir){
-                trail.lineTo(player.body.x+player.width/2, player.body.y);
-                //territory.lineTo(player.body.x+player.width/2, player.body.y);
-            //}
-            //testLine.lineTo(player.x - game.world.centerX, player.y - game.world.centerY);
-            //trail.lineTo(player.body.x+player.width/2, player.body.y + player.width);
+            player.body.y -= playerSpeed;
+            trail.lineTo(player.body.x+player.width/2, player.body.y);   
         }else if(movementSide == Side.down){
-            player.body.y += playerSpeed;//moveDown(300);
-            //if(movementSide == newDir){
-                trail.lineTo(player.body.x+player.body.width/2, player.body.y+player.body.width);
-                //territory.lineTo(player.body.x+player.body.width/2, player.body.y+player.body.width);
-            //}
-            //testLine.lineTo(player.x - game.world.centerX, player.y - game.world.centerY);
-            //trail.lineTo(player.body.x+player.body.width/2, player.body.y);
+            player.body.y += playerSpeed;
+            trail.lineTo(player.body.x+player.body.width/2, player.body.y+player.body.width);
         }
         
         //console.log(steps);
@@ -1215,7 +1284,9 @@ gameState.prototype = {
                     //trail.lineTo(player.body.x, player.body.y);
                     //trail.lineTo(player.body.x+50, player.body.y+50);
                     
-                    trail.lineTo(player.body.x+25, player.body.y+25);
+
+                        trail.lineTo(player.body.x+25, player.body.y+25);
+
                     //territory.lineTo(player.body.x+25, player.body.y+25);
                     
                     
@@ -1325,8 +1396,10 @@ gameState.prototype = {
                     //trail.endFill();
                     //trail.beginFill(0xFF700B, 1);
 
-                    
                     trail.lineTo(player.body.x+25, player.body.y+25);
+
+
+
                     //territory.lineTo(player.body.x+25, player.body.y+25);
                     
 
@@ -1351,7 +1424,7 @@ gameState.prototype = {
                 t_bmd.ctx.lineWidth = 50;
                 t_bmd.ctx.strokeStyle = '#FFCA00';
                 t_bmd.ctx.beginPath();
-                console.log('last step: ' + stepLast);
+                //console.log('last step: ' + stepLast);
                 
                 for(var i = stepLast; i<dots.length;i++){
                     t_bmd.ctx.lineTo(dots[i].x, dots[i].y);
