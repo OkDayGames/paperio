@@ -262,9 +262,9 @@ gameState.prototype = {
         _bmdSprite = game.add.sprite(player.x-300, player.y, _bmd);
         
         //game.physics.arcade.enable(_bmdSprite);
-        game.physics.startSystem(Phaser.Physics.P2JS);
+        //game.physics.startSystem(Phaser.Physics.P2JS);
         //game.physics.p2.enable(_bmdSprite, false);
-        game.physics.enable([_bmdSprite], true);
+        //game.physics.enable([_bmdSprite], true);
         
         //_bmdSprite.body.loadPolygon('physicsData', _bmd);
         
@@ -319,11 +319,11 @@ gameState.prototype = {
         _bmdSprite.events.onDragStart.add(this.startDrag, this);
         _bmdSprite.events.onDragStop.add(this.stopDrag, this);
 
-        game.physics.p2.enable(_bmdSprite, true);
+        //game.physics.p2.enable(_bmdSprite, true);
         //_bmdSprite.body.clearShapes();
         //_bmdSprite.body.addPolygon({},[[0, 0], [70, 0], [70, 70], [0, 0]]);
         //Polygon------------------------------------------------------------------
-        _bmdSprite.body.clearShapes();
+        //_bmdSprite.body.clearShapes();
         //polyDots = [[0, 0], [200, 0], [200, 400], [0, 500], [20,200]];
         //polyDots[polyDots.length] = [-50,200];
         //_bmdSprite.body.addPolygon({},polyDots);
