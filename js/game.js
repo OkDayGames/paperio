@@ -367,7 +367,7 @@ gameState.prototype = {
         //console.log(polyGrap);
         //console.log(player.body.bottom);
         //console.log(player.body);
-        player.events.onEnterBounds.add(this.collisionHandler, this);
+        //player.events.onEnterBounds.add(this.collisionHandler, this);
 
         //console.log(dots);
 
@@ -560,11 +560,12 @@ gameState.prototype = {
             game.debug.geom(new Phaser.Point(player.x, player.y));
         }
 	},*/
+    /*
     collisionHandler: function (obj1, obj2) {
 
         //  The two sprites are colliding
         //console.log('COLLISION !!!!!!!!!!!!!');
-    },
+    },*/
 	update: function(){
         //this.playerMove();
 
