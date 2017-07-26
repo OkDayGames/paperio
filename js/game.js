@@ -93,11 +93,11 @@ var swipeMagnitude = 0;
 
 gameState.prototype = {
 	preload: function(){
-
+        console.log('hello');
 	},
 
 	create: function(){
-        //console.log('hello');
+        
         game.stage.backgroundColor = '#DFF3F7';
         game.world.setBounds(0, 0, worldWidth, worldHeight);
 
