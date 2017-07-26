@@ -102,7 +102,7 @@ gameState.prototype = {
         game.world.setBounds(0, 0, worldWidth, worldHeight);
 
         //game.physics.startSystem(Phaser.Physics.ARCADE);
-        game.physics.startSystem(Phaser.Physics.P2JS);
+        //game.physics.startSystem(Phaser.Physics.P2JS);
         
 		cursors = game.input.keyboard.createCursorKeys();
         //console.log(game.camera);
