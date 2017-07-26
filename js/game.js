@@ -93,7 +93,8 @@ var swipeMagnitude = 0;
 
 gameState.prototype = {
 	preload: function(){
-
+        console.log('preload function');
+        alert('preload function');
 	},
 
 	create: function(){
