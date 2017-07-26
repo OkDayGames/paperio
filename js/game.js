@@ -179,17 +179,159 @@ gameState.prototype = {
        /*
         */
         //------------------------------------------------------------------------------------------------------------------------------------
-       
+        t_bmd = game.add.bitmapData(worldWidth, worldHeight);
+        t_bmdSprite = game.add.sprite(0, 0, t_bmd);
+        t_bmd.ctx.fillStyle = terrainColor;
+        t_bmd.ctx.strokeStyle = terrainColor;
+        t_bmd.ctx.lineWidth = 50;
+        t_bmd.ctx.beginPath();
 
+        t_bmdSprite.alpha = 1;
+
+        t_bmd.ctx.moveTo(player.x - player.width, player.y - player.width);
+        t_bmd.ctx.lineTo(player.x + player.width, player.y - player.width);
+        t_bmd.ctx.lineTo(player.x + player.width, player.y + player.width);
+        t_bmd.ctx.lineTo(player.x - player.width, player.y + player.width);
+
+        dots = [
+            new Phaser.Point(player.x - 50, player.y),
+            new Phaser.Point(player.x + 50, player.y),
+            new Phaser.Point(player.x, player.y + 50),
+            new Phaser.Point(player.x, player.y - 50),
+            new Phaser.Point(player.x+50, player.y + 50),
+            new Phaser.Point(player.x+50, player.y - 50),
+            new Phaser.Point(player.x-50, player.y + 50),
+            new Phaser.Point(player.x-50, player.y - 50),
+            //new Phaser.Point(player.x, player.y)
+        ];
+        dotIndex = 3;
+        //t_bmd.ctx.lineTo(player.x - 25, player.y - 25);
+
+        polyDots = [
+           
+            [1000, 1000],
+            [1500, 1000],
+            [1500, 1500],
+            [1000,1500]
+        ];
+        //console.log(polyDots);
+
+        t_bmd.ctx.closePath();
+        //console.log('t_bmdSprite');
+        //console.log(t_bmdSprite);
+        t_bmd.ctx.stroke();
+        t_bmd.ctx.fill();
+        t_bmd.ctx.closePath();
+
+        t_bmd.update();
+
+        //------------------------------------------------
+
+        bmp_mapEdjes = game.add.bitmapData(worldWidth, worldHeight);
+        bmp_mapEdjesSprite = game.add.sprite(0, 0, bmp_mapEdjes);
+        //bmp_mapEdjesSprite.anchor.set(0.5);
+        //bmp_mapEdjes.ctx.fillStyle = '#FFFFFF';
+        bmp_mapEdjes.ctx.strokeStyle = '#d3d3d3';
+        bmp_mapEdjes.ctx.lineWidth = 50;
+        bmp_mapEdjes.ctx.beginPath();
+
+        bmp_mapEdjes.ctx.rect(250, 250, worldWidth - 300*2+100-3, worldHeight - 300*2+100-3);
+
+        bmp_mapEdjesSprite.anchor.set(0.5);
+        bmp_mapEdjesSprite.x = worldWidth/2;
+        bmp_mapEdjesSprite.y = worldHeight/2;
+
+        bmp_mapEdjesSprite.alpha = 1;
+
+        bmp_mapEdjes.ctx.stroke();
+        //bmp_mapEdjes.ctx.fill();
+        bmp_mapEdjes.ctx.closePath();
+        bmp_mapEdjes.update();
+
+       
+        //------------------------------------------------------------------------------------------------------------------------------------
+
+        bmd_ = game.add.bitmapData(500, 500);
+        bmdSprite_ = game.add.sprite(player.x-300, player.y, _bmd);
+
+        //------------------------------------------------------------------
+        bmd_ = game.add.bitmapData(500, 500);
+        bmdSprite_ = game.add.sprite(player.x-300, player.y, _bmd);
+
+
+        game.world.addChild(player);
+
+        player.anchor.set(0.5);
+
+        //----------------
+
+        this.game.input.onDown.add(this.itemTouchedDown, this);
+        this.game.input.onUp.add(this.itemTouchedUp, this);
 	},
     itemTouchedDown: function(point){
-
+        touctDown.x = point.screenX;
+        touctDown.y = point.screenY;
+        //console.log('x: ' + point.screenX + '; ' + 'y: ' + point.screenY);
+        //console.log(touctDown);
     },
     itemTouchedUp: function(point){
+        touctUp.x = point.screenX;
+        touctUp.y = point.screenY;
+        //console.log('x: ' + point.screenX + '; ' + 'y: ' + point.screenY);
+        //console.log(touctUp);
 
+        this.getMagnitude(touctDown, touctUp);
     },
     getMagnitude: function(start, end){
-        
+        if(start.x > end.x && start.y > end.y && start.x - end.x > start.y - end.y){
+            //left
+            //if(start.x - end.x > start.y - end.y){
+                newDir = Side.left;
+                //console.log('swipe left');
+            //}
+        } else if(start.x > end.x && start.y < end.y && start.x - end.x > end.y - start.y){
+            //left
+            //if(start.x - end.x > end.y - start.y){
+                newDir = Side.left;
+                //console.log('swipe left');
+            //}
+        }else if(end.x > start.x && start.y > end.y && end.x - start.x > start.y - end.y){
+            //right
+            //if(end.x - start.x > start.y - end.y){
+                newDir = Side.right;
+                //console.log('swipe right');
+            //}
+        } else if(end.x > start.x && start.y < end.y && end.x - start.x > end.y - start.y){
+            //right
+            //if(end.x - start.x > end.y - start.y){
+                newDir = Side.right;
+                //console.log('swipe right');
+            //}
+        } else if(start.y < end.y && start.x > end.x && end.y - start.y > start.x - end.x){
+            //down
+            //if(start.y - end.y > start.x - end.x){
+                newDir = Side.down;
+                //console.log('swipe down');
+            //}
+        } else if(start.y < end.y && start.x < end.x && end.y - start.x > end.x - start.x){
+            //down
+            //if(start.x - end.x > end.y - start.y){
+                newDir = Side.down;
+                //console.log('swipe down');
+            //}
+        } else if(start.y > end.y && start.x > end.x && start.y - end.y > start.x - end.x){
+            //up
+            //if(start.y - end.y > start.x - end.x){
+                newDir = Side.up;
+                //console.log('swipe up');
+            //}
+        } else if(start.y > end.y && start.x < end.x && start.y - end.y > end.x - start.x){
+            //up
+            //if(start.x - end.x > end.y - start.y){
+                newDir = Side.up;
+                //console.log('swipe up');
+            //}
+        }
     },
     startDrag: function() {
            
