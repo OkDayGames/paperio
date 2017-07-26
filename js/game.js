@@ -377,9 +377,8 @@ gameState.prototype = {
 
         //----------------
 
-        /*
         this.game.input.onDown.add(this.itemTouchedDown, this);
-        this.game.input.onUp.add(this.itemTouchedUp, this);*/
+        this.game.input.onUp.add(this.itemTouchedUp, this);
 	},
     itemTouchedDown: function(point){
         touctDown.x = point.screenX;
@@ -1367,13 +1366,4 @@ gameState.prototype = {
         }
 
 	}
-},
-
-Dot = function(x, y){
-    this.x = x;
-    this.y = y;
-}
-Line = function(start, end){
-    this.start = start;
-    this.end = end;
 }
