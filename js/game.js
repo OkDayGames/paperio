@@ -567,8 +567,7 @@ gameState.prototype = {
         //console.log('COLLISION !!!!!!!!!!!!!');
     },*/
 	update: function(){
-        //this.playerMove();
-
+/*
         if(newDir == Side.right){
             if(player.x < worldWidth - 305){//bmp_mapEdjes.getPixelRGB(player.x+30,player.y).color == 4292072403){
                 this.playerMove();
@@ -587,8 +586,6 @@ gameState.prototype = {
             }
         }
 
-        //console.log(player.y);
-       
         if(this.onTerrain() && !enterFlag){
             onTerrain = true;
             enterFlag = true;
@@ -602,26 +599,10 @@ gameState.prototype = {
 
             this.onExitTerrain();
         }
+        */
 	},
     onTerrain: function () {
-        /*
-        if(movementSide){
-            //if(movementSide == Side.right){
-                if(t_bmd.getPixelRGB(player.x+12, player.y+12).a > 0){
-                    return true;
-                }else{
-                    return false;
-                }
-            //}
-        }else{
-            if(t_bmd.getPixelRGB(player.x, player.y).a > 0){
-                return true;
-            }else{
-                return false;
-            }
-        }
-        */
-        
+       
             if(t_bmd.getPixelRGB(player.x, player.y).a > 0){
                 return true;
             }else{
