@@ -332,13 +332,11 @@ gameState.prototype = {
         bmp_mapEdjes.ctx.beginPath();
 
         bmp_mapEdjes.ctx.rect(250, 250, worldWidth - 300*2+100-3, worldHeight - 300*2+100-3);
-        //bmp_mapEdjesSprite.pivot.x = bmp_mapEdjesSprite.width/2;
-        //bmp_mapEdjesSprite.pivot.y = bmp_mapEdjesSprite.height/2;
+
         bmp_mapEdjesSprite.anchor.set(0.5);
         bmp_mapEdjesSprite.x = worldWidth/2;
         bmp_mapEdjesSprite.y = worldHeight/2;
-        //bmp_mapEdjesSprite.width -= 250;
-        //bmp_mapEdjesSprite.height -= 250;
+
         bmp_mapEdjesSprite.alpha = 1;
 
         bmp_mapEdjes.ctx.stroke();
