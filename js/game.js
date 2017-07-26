@@ -176,99 +176,7 @@ gameState.prototype = {
             }
         };
 
-        //movementSide = Side.up;
-
-        //trail = game.add.graphics(0, 0);
-        //trail.moveTo(player.x,player.y);
-        //trail.lineTo(0,0)
-        //trail.lineStyle(50, 0xFFFFFF);
-        //trail.anchor.set(0.5);
-        //trail.beginFill(0xFF3300);
-        //trail.alpha = 0.4;
-        //trail.lineStyle(50, 0xffd900, 1);
-
-        
-        //trail.lineTo(player.x,player.y);
-        //trail.anchor.set(0.5);
-        
-        //trail.endFill();
-        
-        // draw a shape
-    
-        //graphics.lineTo(50, 50);
-        
-        //var testLine = game.add.graphics(0, 0);
-        //testLine.lineStyle(50, 0xffd900);
-        //testLine.moveTo(player.body.x, player.body.y+25);
-        //testLine.lineTo(player.body.x+100-10, player.body.y+25);
-        //testLine.lineTo(player.body.x+125, player.body.y+50+10);
-
-        //testLine.lineTo(player.body.x+125, player.body.y+50+20+50);
-        //trail.alpha = 1;
-        /*
-        testLine = game.add.graphics(0, 0);
-        testLine.beginFill(0xFF700B, 1);
-        //testLine.beginPath();
-        testLine.moveTo(0, 25);
-        testLine.lineStyle(25, 0xffd900);
-        //testLine.moveTo(player.body.x, player.body.y+25);
-        testLine.lineTo(player.body.x+150-10, player.body.y+25);
-        testLine.lineTo(player.body.x+200-10, player.body.y+75);
-
-        testLine.lineTo(player.body.x+250-10, player.body.y+75);
-        testLine.lineTo(player.body.x+300-10, player.body.y+125);
-
-        testLine.lineTo(player.body.x+300-10, player.body.y+175);
-        testLine.lineTo(player.body.x-300, player.body.y+175);
-        testLine.lineTo(player.body.x+150-10, player.body.y+25);
-        
-        testLine.endFill();
-
-        game.physics.arcade.enable(testLine);
-        */
-        //-----------------------------------
-        //testLine.lineStyle(10, 0xffd900);
-        /*
-        testLine.beginFill(0xffffff, 1);
-        testLine.moveTo(0, 25);
-        testLine.lineTo(player.body.x-150-10, player.body.y-25);
-        testLine.lineTo(player.body.x-200-10, player.body.y-75);
-        testLine.lineTo(player.body.x-300-10, player.body.y-175);
-        testLine.lineTo(player.body.x+300, player.body.y+175);
-        testLine.lineTo(player.body.x+150-10, player.body.y+25);
-        testLine.endFill();
-        */
-        //testLine.lineTo(player.body.x+125, player.body.y+50+20+50);
-
-        //POLIGOOOOONS
-        //poly = new Phaser.Polygon([new Phaser.Point(player.x, player.y), new Phaser.Point(player.x+400, player.y+400), new Phaser.Point(player.x+600, player.x+600), new Phaser.Point(player.x-500, player.y-500)]);
-        //poly = new Phaser.Polygon(player.x, player.y, player.x+1000,player.y+2000);
-        //poly = new Phaser.Polygon(0,0,100,100,100,200,200,300,100,0,100,-100);
-        //polyGrap = game.add.graphics(player.x, player.y);
-        //polyGrap.beginFill(0xffd900);
-        //polyGrap.drawPolygon(poly.points);
-        //polyGrap.endFill();
-
-        /*
-        var _territory = game.add.graphics(0, 0);
-        _territory.lineStyle(50, 0x000000);
-        _territory.alpha = 0.5;
-        
-        _territory.beginFill(0xFF3300);
-        _territory.moveTo(game.world.centerX, game.world.centerY);
-        _territory.lineTo(game.world.centerX+300, game.world.centerY);
-        _territory.lineTo(game.world.centerX+300, game.world.centerY+200);
-        _territory.lineTo(game.world.centerX, game.world.centerY+200);
-        _territory.lineTo(game.world.centerX, game.world.centerY);
-        _territory.endFill();
-
-        _territory.beginFill(0xFF3300);
-        _territory.moveTo(game.world.centerX, game.world.centerY-500);
-        _territory.lineTo(game.world.centerX+300, game.world.centerY-500);
-        _territory.lineTo(game.world.centerX+300, game.world.centerY-200);
-        _territory.lineTo(game.world.centerX, game.world.centerY-200);
-        _territory.lineTo(game.world.centerX, game.world.centerY-500);
-        _territory.endFill();
+       /*
         */
         //------------------------------------------------------------------------------------------------------------------------------------
         t_bmd = game.add.bitmapData(worldWidth, worldHeight);
@@ -300,11 +208,7 @@ gameState.prototype = {
         //t_bmd.ctx.lineTo(player.x - 25, player.y - 25);
 
         polyDots = [
-            //[game.world.centerX - 25, game.world.centerY - 25],
-            //[game.world.centerX  + 75, game.world.centerY - 25],
-            //[game.world.centerX  + 75, game.world.centerY + 75],
-            //[game.world.centerX  - 25, game.world.centerY + 75]
-            //[player.x - 25, player.y - 25]
+           
             [1000, 1000],
             [1500, 1000],
             [1500, 1500],
@@ -344,25 +248,7 @@ gameState.prototype = {
         bmp_mapEdjes.ctx.closePath();
         bmp_mapEdjes.update();
 
-        //_bmdSprite.body.clearShapes();
-        //_bmdSprite.body.addPolygon({},[[0, 0], [70, 0], [70, 70], [0, 0]]);
-        
-        //Polygon------------------------------------------------------------------
-        //game.physics.p2.enable(t_bmdSprite, true);
-        //t_bmdSprite.body.kinematic = true;
-        //t_bmdSprite.body.clearShapes();
-        //t_bmdSprite.body.addPolygon({},polyDots);
-
-        //polyDots = [[0, 0], [200, 0], [200, 400], [0, 500], [20,200]];
-        //polyDots[polyDots.length] = [-50,200];
        
-        //------------------------------------------------------------------------------------------------------------------------------------
-
-        //game.physics.startSystem(Phaser.Physics.BOX2D);
-        //body = new Phaser.Physics.Box2D.Body(this.game, null, 0, 0, 0);
-        //polygonFixture = polygonBody.setPolygon([-150, -50, 100, -50, 200, 200]);
-        
-        
         //------------------------------------------------------------------------------------------------------------------------------------
 
         bmd_ = game.add.bitmapData(500, 500);
@@ -570,8 +456,9 @@ gameState.prototype = {
             _bmdSprite.body.moves = true;
             //console.log('stopdrag');
         },
-
+/*
 	render: function(){
+        
 
         if(isDebug){
 		    game.debug.cameraInfo(game.camera, 32, 32);
@@ -671,13 +558,8 @@ gameState.prototype = {
         
 
             game.debug.geom(new Phaser.Point(player.x, player.y));
-        }*/
-        for(var i = 0; i < greenDots.length; i++){
-        //        game.debug.geom(greenDots[i], 'rgba(0,255,0,1)' );
-        }}
-
-        
-	},
+        }
+	},*/
     collisionHandler: function (obj1, obj2) {
 
         //  The two sprites are colliding
