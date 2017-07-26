@@ -265,73 +265,15 @@ gameState.prototype = {
 
         //----------------
 
-        this.game.input.onDown.add(this.itemTouchedDown, this);
-        this.game.input.onUp.add(this.itemTouchedUp, this);
 	},
     itemTouchedDown: function(point){
-        touctDown.x = point.screenX;
-        touctDown.y = point.screenY;
-        //console.log('x: ' + point.screenX + '; ' + 'y: ' + point.screenY);
-        //console.log(touctDown);
+
     },
     itemTouchedUp: function(point){
-        touctUp.x = point.screenX;
-        touctUp.y = point.screenY;
-        //console.log('x: ' + point.screenX + '; ' + 'y: ' + point.screenY);
-        //console.log(touctUp);
 
-        this.getMagnitude(touctDown, touctUp);
     },
     getMagnitude: function(start, end){
-        if(start.x > end.x && start.y > end.y && start.x - end.x > start.y - end.y){
-            //left
-            //if(start.x - end.x > start.y - end.y){
-                newDir = Side.left;
-                //console.log('swipe left');
-            //}
-        } else if(start.x > end.x && start.y < end.y && start.x - end.x > end.y - start.y){
-            //left
-            //if(start.x - end.x > end.y - start.y){
-                newDir = Side.left;
-                //console.log('swipe left');
-            //}
-        }else if(end.x > start.x && start.y > end.y && end.x - start.x > start.y - end.y){
-            //right
-            //if(end.x - start.x > start.y - end.y){
-                newDir = Side.right;
-                //console.log('swipe right');
-            //}
-        } else if(end.x > start.x && start.y < end.y && end.x - start.x > end.y - start.y){
-            //right
-            //if(end.x - start.x > end.y - start.y){
-                newDir = Side.right;
-                //console.log('swipe right');
-            //}
-        } else if(start.y < end.y && start.x > end.x && end.y - start.y > start.x - end.x){
-            //down
-            //if(start.y - end.y > start.x - end.x){
-                newDir = Side.down;
-                //console.log('swipe down');
-            //}
-        } else if(start.y < end.y && start.x < end.x && end.y - start.x > end.x - start.x){
-            //down
-            //if(start.x - end.x > end.y - start.y){
-                newDir = Side.down;
-                //console.log('swipe down');
-            //}
-        } else if(start.y > end.y && start.x > end.x && start.y - end.y > start.x - end.x){
-            //up
-            //if(start.y - end.y > start.x - end.x){
-                newDir = Side.up;
-                //console.log('swipe up');
-            //}
-        } else if(start.y > end.y && start.x < end.x && start.y - end.y > end.x - start.x){
-            //up
-            //if(start.x - end.x > end.y - start.y){
-                newDir = Side.up;
-                //console.log('swipe up');
-            //}
-        }
+        
     },
     startDrag: function() {
            
